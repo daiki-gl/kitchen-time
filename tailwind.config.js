@@ -12,7 +12,18 @@ module.exports = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      colors: {
+        transparent: 'transparent',
+        primaryColor: '#FBB06E',
+        secondaryColor: '#FFECDB',
+        accentColor: '#ED6C24',
+        'font-color': '#2E2828',
+      },
+      backgroundImage: {
+        'login-bg': "url('../../public/images/login-bg1.jpg')",
+        'sign-up-bg': "url('../../public/images/login-bg2.jpg')",
+      },
     },
   },
-  plugins: [],
+  plugins: [require('daisyui')],
 }
