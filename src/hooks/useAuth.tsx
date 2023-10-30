@@ -37,7 +37,7 @@ const useAuth = () => {
     }
 
       const handleLogin = async(formData:any, setLoginError: any) => {
-        console.log(formData);
+        // console.log(formData);
         setLoginError(null)
         const {data: {session}, error} =  await supabase.auth.signInWithPassword({
             email: formData.email, 

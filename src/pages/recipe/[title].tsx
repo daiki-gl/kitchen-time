@@ -32,7 +32,7 @@ export async function getServerSideProps  (context:any) {
               .eq('id', context.params.title)
               .single()
 
-              console.log(data);
+              console.log({data});
               
               if(error){
                   console.log(error);

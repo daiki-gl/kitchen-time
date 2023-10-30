@@ -62,7 +62,7 @@ const RecipeList = ({userData}:any) => {
             <div key={recipe.id} className="rounded-full w-full relative pt-[80%]">
               <Link 
               href={{
-                pathname:`/recipe/${recipe.title}`,
+                pathname:`/recipe/${recipe.id}`,
                 query: { 
                   ...recipe,
                   ... recipe.users,
@@ -71,7 +71,7 @@ const RecipeList = ({userData}:any) => {
                   directions: JSON.stringify(recipe.directions)
                   }
                 }}
-                as={`/recipe/${(recipe.title)}`}
+                as={`/recipe/${(recipe.id)}`}
                >
                 <Image
                   src={`${recipe.thumbnail ? recipe.thumbnail : '/images/no-image-sm.jpg'}`}
@@ -89,7 +89,7 @@ const RecipeList = ({userData}:any) => {
             <div key={recipe.id} className="rounded-full w-full relative pt-[80%]">
               <Link 
               href={{
-                pathname:`/recipe/${recipe.title}`,
+                pathname:`/recipe/${recipe.id}`,
                 query: { 
                   ...recipe,
                   ... recipe.users,
@@ -98,7 +98,7 @@ const RecipeList = ({userData}:any) => {
                   directions: JSON.stringify(recipe.directions)
                   }
                 }}
-                as={`/recipe/${(recipe.title)}`}
+                as={`/recipe/${(recipe.id)}`}
                >
                 <Image
                   src={`${recipe.thumbnail ? recipe.thumbnail : '/images/no-image-sm.jpg'}`}

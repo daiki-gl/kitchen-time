@@ -42,7 +42,7 @@ const SearchRecipe = () => {
             <div key={result.id} className="rounded-full w-full relative pt-[80%]">
               {/* <Link href={`/recipe/${result.title}`} > */}
               <Link href={{
-                pathname:`/recipe/${result.title}`,
+                pathname:`/recipe/${result.id}`,
                 query: { 
                   ...result,
                   ...result.users,
@@ -51,7 +51,7 @@ const SearchRecipe = () => {
                   directions: JSON.stringify(result.directions),
                   }
                 }}
-                as={`/recipe/${(result.title)}`}
+                as={`/recipe/${(result.id)}`}
                 >
                 <Image 
                   src={`${result.thumbnail ? result.thumbnail : '/images/no-image-sm.jpg'}`}

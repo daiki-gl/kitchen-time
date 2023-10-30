@@ -43,7 +43,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context:any) {
-  console.log(context.params.id);
+  // console.log(context.params.id);
   const {data, error} = await supabase
     .from('users')
     .select()
