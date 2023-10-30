@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdPersonSearch, MdOutlineFoodBank } from 'react-icons/md'
 import { BsBookmarkStar } from 'react-icons/bs'
 import { FiLogOut } from 'react-icons/fi'
@@ -11,11 +11,14 @@ import { selectUser, unsetUser } from '@/redux/slice/UserSlice'
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabaseClient'
 
+const DEFAULT_URL = '/images/default_cover.jpg'
+
 const Navigation = () => {
   // const session = useSession()
   const dispatch = useDispatch()
   const {push, pathname} = useRouter()
   const user = useSelector(selectUser)
+  const [url, setUrl] = useState<string>(user.avatar|| DEFAULT_URL)
 
   // console.log({user});
 
@@ -28,6 +31,9 @@ const Navigation = () => {
     })
   }
 
+  useEffect(() => {
+   user && user.avatar && setUrl(user.avatar)
+  },[user])
 
   return (
     <nav className="bg-primaryColor py-3 px-5 fixed bottom-0 w-screen md:left-0 md:w-auto md:top-0 md:py-10 lg:max-w-xs lg:w-full z-50">
@@ -88,7 +94,7 @@ const Navigation = () => {
                 className='block w-full h-full  md:inline-block lg:w-auto text-white'
                 >
                 <Image 
-                  src={`${user.avatar ? user.avatar : '/images/Guest.jpg'} `}
+                  src={url}
                   alt='username' 
                   width={40} 
                   height={40} 
