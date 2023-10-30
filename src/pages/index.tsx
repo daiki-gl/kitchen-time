@@ -19,7 +19,7 @@ export default function Home({data}:any) {
       (!user) && push('/login')
     }
     // console.log({data});
-  },[user])
+  },[user,loadingUser,push])
 
   return (
     <div className='min-h-screen pt-16 pb-20 md:ml-[68px] md:pt-5 lg:ml-80'>

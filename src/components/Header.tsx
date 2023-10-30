@@ -23,7 +23,7 @@ const Header = () => {
 
     useEffect(() => {
        setHeader(switchHeader(pathname, query))
-    },[pathname])
+    },[pathname,query,switchHeader])
 
     // useEffect(() => {
     //   dispatch(getLoginUser(user.id))

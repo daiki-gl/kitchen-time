@@ -15,7 +15,8 @@ const useGetData = () => {
   useEffect(() => {
     dispatch(getRecipes()) // redux/store.tsx/middleware: [thunk] has the problem
       user && dispatch(getLoginUser(user.id))
-  },[])
+  // },[])
+  })
 
   // useEffect(() => {
   //   user && dispatch(getLoginUser(user.id))

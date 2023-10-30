@@ -62,7 +62,8 @@ const RecipeCard = ({recipe}:{recipe:any}) => {
 
       useEffect(() => {
         fetchBookmark()
-      },[])
+      })
+      // },[])
       
   return (
     <div className="recipe-box mb-6" key={recipe.id}>

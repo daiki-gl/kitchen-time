@@ -22,11 +22,11 @@ const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
       if(userId === id) {
         dispatch(getLoginUser(id))
       }
-      },[url])
+      },[dispatch,url,id,userId])
 
       useEffect(() => {
         setUrl(avatar || DEFAULT_URL)
-      },[asPath])
+      },[setUrl,asPath,avatar])
 
     const updateCover = async(e:React.ChangeEvent<HTMLInputElement>) => {
         setEditing(true)

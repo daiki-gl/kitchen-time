@@ -46,7 +46,8 @@ const RecipeList = ({userData}:any) => {
   useEffect(() => {
     fetchBookmarkedRecipes()
     fetchRecipes()
-  },[])
+  })
+  // },[])
   
   // useEffect(() => {
   //   console.log(recipes);
