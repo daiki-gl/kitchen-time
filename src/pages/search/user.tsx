@@ -1,20 +1,34 @@
 import { supabase } from '@/lib/supabaseClient'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 
-const SearchUser = () => {
-  const [results, setResults] = useState(null);
+// type searchedUser = {
+//   id : string
+//   name :  string
+//   avatar : string
+//   bio  : string,
+//   cover_image : string 
+// }
 
-  const handleSearch = async(e:React.ChangeEvent<HTMLInputElement>) => {
-    const keyword = e.target.value || null
-    const { data, error } = await supabase.from('users')
+type searchedUser = Awaited<ReturnType<typeof SearchUser>>
+
+const SearchUser = () => {
+  const [results, setResults] = useState<any>(null);
+  // const [results, setResults] = useState<searchedUser[] | null>(null);
+  
+  async function searchUser(keyword:string | null) {
+   const {data, error} = await supabase.from('users')
       .select()
       .ilike('name', `%${keyword}%`)
-
       if(error) console.log(error);
       setResults(data)
+  } 
+  
+  const handleSearch = async(e:React.ChangeEvent<HTMLInputElement>) => {
+    const keyword = e.target.value || null
+      searchUser(keyword)
   }
 
   return (
@@ -30,9 +44,16 @@ const SearchUser = () => {
 
       <div className="my-3">
         {results && (
-          results.map((result) => (
+          results.map((result:any) => (
           <div key={result.id} className="my-5">
-            <Link href={`/profile/${result.name}`} >
+            <Link href={{
+                pathname:`/profile/${result.id}`,
+                query: { 
+                  ...result,
+                  }
+                }}
+                as={`/profile/${(result.id)}`}
+                >
               <Image 
                 src={`${result.avatar ? result.avatar : '/images/Guest.jpg'}`}
                 alt=''
@@ -45,8 +66,6 @@ const SearchUser = () => {
           </div>
           ))
         )}
-       
-
       </div>
     </div>
   )

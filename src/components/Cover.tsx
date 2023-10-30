@@ -3,24 +3,30 @@ import { supabase } from '@/lib/supabaseClient'
 import { ProfilePageProps } from '@/pages/profile/ProfilePage'
 import { getLoginUser } from '@/redux/middleware/api'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineCamera } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import FadeLoader from 'react-spinners/FadeLoader'
 
 
-let defaultUrl = '/images/default_cover.jpg'
+const DEFAULT_URL = '/images/default_cover.jpg'
 
-const Cover = ({isEdit, setIsEdit}: ProfilePageProps) => {
-    const {id, cover_image} = useSelector((state) => state.users.user[0])
+const Cover = ({isEdit, setIsEdit, cover_image, userId}: ProfilePageProps) => {
+    const { id } = useSelector((state:any) => state.persistedReducer.users.user[0])
     // change these to Redux later
-    const [url, setUrl] = useState(cover_image || defaultUrl)
+    const [url, setUrl] = useState(cover_image || DEFAULT_URL)
     const [editing, setEditing] = useState(false)
     const dispatch = useDispatch()
+    const {asPath} = useRouter()
 
     useEffect(() => {
-        dispatch(getLoginUser(id))
-      },[url])
+      if(userId === id) dispatch(getLoginUser(id))
+    },[url])
+    
+    useEffect(() => {
+        setUrl(cover_image || DEFAULT_URL)
+      },[asPath])
 
     const updateCover = async(e:React.ChangeEvent<HTMLInputElement>) => {
         setEditing(true)
@@ -61,7 +67,7 @@ const Cover = ({isEdit, setIsEdit}: ProfilePageProps) => {
                   alt=''
                   width={300}
                   height={130}
-                  className='w-full object-cover object-center h-40 md:h-60'
+                  className='w-full object-cover object-center h-40 md:h-60 pointer-events-none'
                   />
             )}
                 {isEdit && (

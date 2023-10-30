@@ -5,19 +5,21 @@ import React, { useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 
 const SearchRecipe = () => {
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState<any>(null);
 
   const handleSearch = async(e:React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const keyword = e.target.value || null
     console.log(keyword);
     const { data, error } = await supabase.from('recipes')
-      .select()
+      .select('*, users(id, name, avatar)')
       .ilike('title', `%${keyword}%`)
 
       if(error) console.log(error);
       setResults(data)
   }
+
+  console.log(results);
 
   return (
     <div className='min-h-screen px-5 pt-14 pb-24 mx-auto md:ml-[68px] md:pt-5 lg:ml-80'>
@@ -36,11 +38,23 @@ const SearchRecipe = () => {
 
 
             {results && (
-              results.map((result) => (
+              results.map((result:any) => (
             <div key={result.id} className="rounded-full w-full relative pt-[80%]">
-              <Link href={`/recipe/${result.title}`} >
+              {/* <Link href={`/recipe/${result.title}`} > */}
+              <Link href={{
+                pathname:`/recipe/${result.title}`,
+                query: { 
+                  ...result,
+                  ...result.users,
+                  recipeId: result.id,
+                  ingredients: JSON.stringify(result.ingredients), 
+                  directions: JSON.stringify(result.directions),
+                  }
+                }}
+                as={`/recipe/${(result.title)}`}
+                >
                 <Image 
-                  src={`${result.thumbnail}`}
+                  src={`${result.thumbnail ? result.thumbnail : '/images/no-image-sm.jpg'}`}
                   alt=''
                   width={155}
                   height={130}

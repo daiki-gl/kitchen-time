@@ -1,23 +1,57 @@
 import Link from 'next/link';
 import React from 'react'
+import { useSelector } from 'react-redux';
 
-const Tabs = ({userId, active = 'recipe'}: {userId?:string, active?: string}) => {
+const Tabs = ({userData, active = 'recipe'}: {userData:any, active?: string}) => {
     const tabClasses = 'flex gap-1 px-4 py-1 items-center border-b-4 border-b-white';
     const activeTabClasses = 'flex gap-1 px-4 py1 items-center border-b-4 border-accentColor text-accentColor';
+    
+    const loginUserId = useSelector((state:any) => state.persistedReducer.users.user[0]?.id)
+    const { id } = userData
+
+    // console.log({userData});
+
 
   return (
     <div className="mt-4 md:mt-10 flex gap-0 justify-center">
-    <Link href={`/profile/${userId}/recipe`} className={active === 'recipe' ? activeTabClasses : tabClasses }>
+    <Link href={{
+                pathname:`/profile/${id}/recipe`,
+                // query: { 
+                //   ...userData,
+                //   }
+                }}
+                as={`/profile/${(id)}/recipe`}
+                className={active === 'recipe' ? activeTabClasses : tabClasses }
+                >
         Recipes
     </Link>
-    <Link href={`/profile/${userId}/bookmark-list`} className={active === 'bookmark-list' ? activeTabClasses : tabClasses}>
+    <Link href={{
+                pathname:`/profile/${id}/bookmark-list`,
+                // query: { 
+                //   ...userData,
+                //   }
+                }}
+                as={`/profile/${(id)}/bookmark-list`}
+                className={active === 'bookmark-list' ? activeTabClasses : tabClasses}
+                >
         Bookmarks
     </Link>
-    <Link href={`/profile/${userId}/settings`} className={active === 'settings' ? activeTabClasses : tabClasses}>
+    {loginUserId === id && (
+    <Link href={{
+                pathname:`/profile/${id}/settings`,
+                // query: { 
+                //   ...userData,
+                //   }
+                }}
+                as={`/profile/${(id)}/settings`}
+                className={active === 'settings' ? activeTabClasses : tabClasses}
+                >
         Settings
     </Link>
+    )}
 </div>
   )
 }
 
 export default Tabs
+

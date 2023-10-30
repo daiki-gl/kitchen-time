@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { getLoginUser } from "../middleware/api"
+import { RootState } from "../store"
 
 // change any type
 type StateType = {
@@ -20,9 +21,11 @@ const userSlice = createSlice({
     reducers: {
         setUser(state, action) {
             state.user = action.payload
+            console.log(state.user);
         },
         unsetUser(state) {
             state.user = null
+            console.log('unset user', state.user);
         },
     },
     extraReducers: (builder) => {
@@ -47,5 +50,9 @@ const userSlice = createSlice({
 })
 
 export const { setUser, unsetUser } = userSlice.actions;
+
+export const selectUser = ((state: RootState) => (state.persistedReducer.users.user !== null) && state.persistedReducer.users?.user[0])
+export const selectUserLoading = ((state: RootState) => state.persistedReducer.users.loading)
+export const selectRecipe = ((state:RootState) => state.persistedReducer.recipe)
 
 export default userSlice.reducer;

@@ -1,35 +1,31 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { MdPersonSearch, MdOutlineFoodBank } from 'react-icons/md'
 import { BsBookmarkStar } from 'react-icons/bs'
 import { FiLogOut } from 'react-icons/fi'
 import { AiOutlineHome, AiOutlineSearch } from 'react-icons/ai'
-import { fetchLoginUser } from './Header'
 import { useSession } from '@supabase/auth-helpers-react'
 import { useDispatch, useSelector } from 'react-redux'
-import { unsetUser } from '@/redux/slice/UserSlice'
+import { selectUser, unsetUser } from '@/redux/slice/UserSlice'
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabaseClient'
 
 const Navigation = () => {
-  const [userData, setUserData] = useState<any>(null)
   // const session = useSession()
   const dispatch = useDispatch()
-  const {push} = useRouter()
-  const user = useSelector(state => {
-    if(state.users.user !== null) {
-     return state.users.user[0]
-    }
-  })
+  const {push, pathname} = useRouter()
+  const user = useSelector(selectUser)
 
+  // console.log({user});
 
-  const handleLogout = async () => {
-    push('/login')
-    dispatch(unsetUser())
-    const { error } = await supabase.auth.signOut()
-    if (error) return console.error(error)
-
+  const handleLogout = () => {
+    push('/login').finally( async() =>{
+      dispatch(unsetUser())
+      const { error } = await supabase.auth.signOut()
+      if (error) return console.error(error)
+      // console.log('>>>>>>>>>',user);
+    })
   }
 
 
@@ -67,19 +63,36 @@ const Navigation = () => {
               </Link>
             </li>
           <li className='w-5 h-5 md:mb-5 md:w-7 md:h-7 lg:w-full'>
-            <Link href={`/profile/${user.name}/bookmark-list`} className='block w-full h-full  md:inline-block lg:w-auto text-white'>
+            <Link href={{
+                pathname:`/profile/${user.id}/bookmark-list`,
+                query: { 
+                  ...user,
+                  }
+                }}
+                as={`/profile/${(user.id)}/bookmark-list`}
+                className='block w-full h-full  md:inline-block lg:w-auto text-white'
+                >
               <BsBookmarkStar className='w-full h-full  md:inline-block md:w-auto' />
               <span className="hidden lg:inline-block ml-3">Bookmarks</span>
             </Link>
           </li>
+
           <li className='hidden md:block w-5 h-5 md:mb-5 md:w-7 md:h-7 lg:w-full'>
-            <Link href={`/profile/${user.name}`} className='block w-full h-full  md:inline-block lg:w-auto text-white'>
+            <Link href={{
+                pathname:`/profile/${user.id}`,
+                query: { 
+                  ...user,
+                  }
+                }}
+                as={`/profile/${(user.id)}`}
+                className='block w-full h-full  md:inline-block lg:w-auto text-white'
+                >
                 <Image 
                   src={`${user.avatar ? user.avatar : '/images/Guest.jpg'} `}
                   alt='username' 
                   width={40} 
                   height={40} 
-                  className="rounded-full w-full h-full object-cover inline-block lg:w-[30px] lg:h-[30px]" />
+                  className="rounded-full w-full h-full object-cover inline-block lg:w-[30px] lg:h-[30px] pointer-events-none" />
               <span className="hidden lg:inline-block ml-3">Profile</span>
             </Link>
           </li>

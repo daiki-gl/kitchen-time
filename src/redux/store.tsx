@@ -1,10 +1,25 @@
 import {configureStore} from "@reduxjs/toolkit";
-import RecipeSlice from "./slice/RecipeSlice";
-import UserSlice from "./slice/UserSlice";
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import { rootReducer } from "./slice";
+import thunk from "redux-thunk"
+
+
+const persistConfig = {
+    key: 'root',
+    storage,
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
     reducer: {
-        recipe: RecipeSlice,
-        users: UserSlice,
-    }
+        persistedReducer
+    },
+    middleware: [thunk]
 })
+
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
+
+

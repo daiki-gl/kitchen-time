@@ -3,19 +3,30 @@ import { supabase } from '@/lib/supabaseClient'
 import { ProfilePageProps } from '@/pages/profile/ProfilePage'
 import { getLoginUser } from '@/redux/middleware/api'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineCamera } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import FadeLoader from 'react-spinners/FadeLoader'
 
-const Avatar = ({isEdit, setIsEdit}: ProfilePageProps) => {
-    const {id, avatar} = useSelector((state) => state.users.user[0])
+const DEFAULT_URL = '/images/Guest.jpg'
+
+const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
+    const {id} = useSelector((state:any) => state.persistedReducer.users.user[0])
     const [editing, setEditing] = useState(false)
+    const [url, setUrl] = useState(avatar || DEFAULT_URL)
     const dispatch = useDispatch()
+    const {asPath} = useRouter()
 
     useEffect(() => {
+      if(userId === id) {
         dispatch(getLoginUser(id))
-      },[editing])
+      }
+      },[url])
+
+      useEffect(() => {
+        setUrl(avatar || DEFAULT_URL)
+      },[asPath])
 
     const updateCover = async(e:React.ChangeEvent<HTMLInputElement>) => {
         setEditing(true)
@@ -36,8 +47,8 @@ const Avatar = ({isEdit, setIsEdit}: ProfilePageProps) => {
   
               if(error) console.log(error);
 
+              setUrl(url)
               setEditing(false)
-              
             }
         }
         setIsEdit(false)
@@ -52,11 +63,12 @@ const Avatar = ({isEdit, setIsEdit}: ProfilePageProps) => {
                 
             ): (
                 <Image
-              src={`${avatar ? avatar : '/images/Guest.jpg'}`}
+              // src={`${avatar ? avatar : '/images/Guest.jpg'}`}
+              src={url}
               alt=''
               width={80}
               height={80}
-              className='rounded-full w-24 h-24 object-cover shadow-xl md:w-28 md:h-28'
+              className='rounded-full w-24 h-24 object-cover shadow-xl md:w-28 md:h-28 pointer-events-none'
             />
             )}
             
