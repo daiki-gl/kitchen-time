@@ -10,7 +10,7 @@ const RecipeList = ({userData}:any) => {
 
   // const recipes = useSelector(state => state.recipe.recipes)
   const [recipes, setRecipes] = useState<any>(null)
-  const [bookmarkRecipes, setBookmarkRecipes] = useState(null);
+  const [bookmarkRecipes, setBookmarkRecipes] = useState<any>(null);
 
   const {query: {tab}}  = useRouter()
 
@@ -29,7 +29,7 @@ const RecipeList = ({userData}:any) => {
       .select()
       .eq('user_id', userData.id)
 
-      const bookmarkedIds = data.map(bookmarkItem => bookmarkItem.recipe_id)
+      const bookmarkedIds = data!.map(bookmarkItem => bookmarkItem.recipe_id)
 
       if(bookmarkedIds.length > 0) {
        const {data, error} = await supabase.from('recipes')
@@ -57,7 +57,7 @@ const RecipeList = ({userData}:any) => {
   return (
     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 m-5 xl:grid-cols-4 lg:lg:mx-24">
 
-        {recipes && tab[0] === 'recipe' && recipes.map((recipe:any) => (
+        {recipes && tab && tab[0] === 'recipe' && recipes.map((recipe:any) => (
             <div key={recipe.id} className="rounded-full w-full relative pt-[80%]">
               <Link 
               href={{
@@ -84,7 +84,7 @@ const RecipeList = ({userData}:any) => {
             </div>
         ))}
 
-        {bookmarkRecipes && tab[0] === 'bookmark-list' && bookmarkRecipes.map((recipe:any) => (
+        {bookmarkRecipes && tab && tab[0] === 'bookmark-list' && bookmarkRecipes.map((recipe:any) => (
             <div key={recipe.id} className="rounded-full w-full relative pt-[80%]">
               <Link 
               href={{
