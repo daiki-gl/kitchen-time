@@ -12,23 +12,27 @@ import React, { useEffect, useState } from 'react'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 
+const DEFAULT_URL = '/images/default_cover.jpg'
+
 const Header = () => {
     const {pathname, query} = useRouter()
     const [header, setHeader] = useState('')
     const {switchHeader} = useHeaderTitleSwitcher()
+    const user:any = useGetLoginUser()
+    const [url, setUrl] = useState<string>(user.avatar|| DEFAULT_URL)
     // const user = useSelector<RootState>(state => (state.users.user !== null) && state.users?.user[0]) as User
     // const dispatch = useDispatch<AppDispatch>()
 
-    const user:any = useGetLoginUser()
 
     useEffect(() => {
        setHeader(switchHeader(pathname, query))
        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[pathname])
 
-    // useEffect(() => {
-    //   dispatch(getLoginUser(user.id))
-    // },[user])
+    useEffect(() => {
+      // dispatch(getLoginUser(user.id))
+     user && user.avatar && setUrl(user.avatar)
+    },[user])
 
   return (
     <header className='header flex justify-between items-center bg-primaryColor py-2 px-5 fixed w-screen top-0 z-50 md:hidden'>
@@ -50,7 +54,7 @@ const Header = () => {
                     // as={`/profile/${(user.id)}`}
                 className='rounded-full h-[40px] w-[40px] border border-white'
             >
-                    <Image src={user.avatar ? user.avatar : '/images/Guest.jpg'} alt='username' width={40} height={40} className="rounded-full w-full h-full object-cover" />
+                    <Image src={url} alt='username' width={40} height={40} className="rounded-full w-full h-full object-cover" />
             </Link>
             )
         }
