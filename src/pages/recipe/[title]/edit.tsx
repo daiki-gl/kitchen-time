@@ -2,10 +2,11 @@ import SearchInput from '@/components/SearchInput';
 import { supabase } from '@/lib/supabaseClient'
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react'
-import { RecipePageProps } from '.';
-import RecipeForm from '@/components/RecipeForm';
 
-const Edit = ({data:recipe}:RecipePageProps) => {
+import RecipeForm from '@/components/RecipeForm';
+import { RecipePageProps } from '../[title]';
+
+const Edit = ({data:recipe}:any) => {
   const [item, setItem] = useState<RecipePageProps | null>(null)
 
   useEffect(() => {
