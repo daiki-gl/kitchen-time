@@ -48,3 +48,12 @@
 
 //   return {props: {data: userData}}
 // }
+import ProfilePage from './ProfilePage'
+
+const index = ({data}:{data:any}) => {
+  return (
+    <ProfilePage data={data} />
+  )
+}
+
+export default index
