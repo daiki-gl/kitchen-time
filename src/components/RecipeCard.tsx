@@ -62,8 +62,8 @@ const RecipeCard = ({recipe}:{recipe:any}) => {
 
       useEffect(() => {
         fetchBookmark()
-      })
-      // },[])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[])
       
   return (
     <div className="recipe-box mb-6" key={recipe.id}>

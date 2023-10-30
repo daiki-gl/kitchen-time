@@ -46,8 +46,8 @@ const RecipeList = ({userData}:any) => {
   useEffect(() => {
     fetchBookmarkedRecipes()
     fetchRecipes()
-  })
-  // },[])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
   
   // useEffect(() => {
   //   console.log(recipes);

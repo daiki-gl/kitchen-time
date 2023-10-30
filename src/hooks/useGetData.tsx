@@ -15,8 +15,8 @@ const useGetData = () => {
   useEffect(() => {
     dispatch(getRecipes()) // redux/store.tsx/middleware: [thunk] has the problem
       user && dispatch(getLoginUser(user.id))
-  // },[])
-  })
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   // useEffect(() => {
   //   user && dispatch(getLoginUser(user.id))

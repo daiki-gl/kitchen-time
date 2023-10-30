@@ -23,7 +23,8 @@ const Header = () => {
 
     useEffect(() => {
        setHeader(switchHeader(pathname, query))
-    },[pathname,query,switchHeader])
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[pathname])
 
     // useEffect(() => {
     //   dispatch(getLoginUser(user.id))

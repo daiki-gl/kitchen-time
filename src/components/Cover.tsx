@@ -22,11 +22,13 @@ const Cover = ({isEdit, setIsEdit, cover_image, userId}: ProfilePageProps) => {
 
     useEffect(() => {
       if(userId === id) dispatch(getLoginUser(id))
-    },[url,id,dispatch,userId])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[url])
     
     useEffect(() => {
         setUrl(cover_image || DEFAULT_URL)
-      },[asPath,cover_image])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[asPath])
 
     const updateCover = async(e:React.ChangeEvent<HTMLInputElement>) => {
         setEditing(true)

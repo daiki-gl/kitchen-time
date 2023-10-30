@@ -22,11 +22,13 @@ const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
       if(userId === id) {
         dispatch(getLoginUser(id))
       }
-      },[dispatch,url,id,userId])
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[url])
 
       useEffect(() => {
         setUrl(avatar || DEFAULT_URL)
-      },[setUrl,asPath,avatar])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[asPath])
 
     const updateCover = async(e:React.ChangeEvent<HTMLInputElement>) => {
         setEditing(true)
