@@ -15,8 +15,6 @@ const RecipePage = ({data}:{data:any}) => {
   const { push } = useRouter()
   const [bookmark, setBookmark] = useState(false)
 
-  console.log(data, data.id);
-
   const handleDelete = async () => {
     const { error } = await supabase
       .from('recipes')
@@ -79,9 +77,6 @@ const RecipePage = ({data}:{data:any}) => {
           }
     }
 
-    useEffect(() => {
-    //   fetchBookmark()
-    },[])
     return (
         <div className="min-h-screen px-5 pt-14 pb-24 mx-auto md:ml-[68px] md:pt-5 lg:ml-80">
           <div className='w-full h-full max-h-80 mt-5 xl:max-h-[400px]'>

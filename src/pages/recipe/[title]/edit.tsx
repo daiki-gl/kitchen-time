@@ -13,6 +13,8 @@ const Edit = ({data:recipe}:any) => {
     setItem(recipe)
   },[recipe])
 
+  console.log({recipe})
+
 
   return (
     <div className="min-h-screen overflow-y-auto px-5 pt-14 pb-24 mx-auto md:ml-[68px] md:pt-5 lg:ml-80">
@@ -29,10 +31,20 @@ const Edit = ({data:recipe}:any) => {
 export default Edit
 
 export async function getServerSideProps  (context:any) {
-  console.log(context.query) 
+  console.log(context.query.id) 
+  const {data, error} = await supabase
+              .from('recipes')
+              .select('*, users(id, name, avatar, bio, cover_image)')
+              .eq('id', context.query.id)
+              .single()
+
+              console.log({data});
+              
+              if(error){
+                  console.log(error);
+                  return []
+              }
   return {
-      props: { 
-         data: context.query
-      }
+      props: {data}
   }
 }

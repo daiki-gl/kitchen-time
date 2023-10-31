@@ -61,10 +61,12 @@ const RecipeForm = ({item}:RecipeFormProps) => {
     const ingredientsRef = useRef(null);
     const directionsRef = useRef(null);
 
+    console.log({item})
+
 
     useEffect(() => {
-      item && item.ingredients && setIngredients(JSON.parse(item.ingredients))
-      item && item.directions && setDirections(JSON.parse(item.directions))
+      item && item.ingredients && setIngredients(item.ingredients)
+      item && item.directions && setDirections(item.directions)
     },[item])
 
     useEffect(() => {
