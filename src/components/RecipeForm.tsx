@@ -61,7 +61,7 @@ const RecipeForm = ({item}:RecipeFormProps) => {
     const ingredientsRef = useRef(null);
     const directionsRef = useRef(null);
 
-    console.log({item})
+    console.log(id)
 
 
     useEffect(() => {
@@ -100,13 +100,13 @@ const RecipeForm = ({item}:RecipeFormProps) => {
 
 
     const onSubmit = async(data:any) => {
-     const ingredients = handleSanitize(ingredientsRef, 'name', 'quantity');
-     const directions = handleSanitize(directionsRef, 'desc', 'image');
+      const ingredients = handleSanitize(ingredientsRef, 'name', 'quantity');
+      const directions = handleSanitize(directionsRef, 'desc', 'image');
       const image = data.thumbnail && typeof data.thumbnail[0] !== 'string' ? await insertImage(data.thumbnail[0]) : data.thumbnail;
 
         if(pathname === '/recipe/create') {
-          console.log(data.thumbnail);
-          console.log(image);
+          // console.log(data.thumbnail);
+          // console.log(image);
          if(ingredients && directions) {
            const { data:_data,error }:any = await supabase.from('recipes')
               .insert({
@@ -129,7 +129,7 @@ const RecipeForm = ({item}:RecipeFormProps) => {
                 ingredients, 
                 directions,
               })
-              .eq('id',item!.recipeId)
+              .eq('id',item?.id)
               .select()
   
               if(error) console.log(error);
