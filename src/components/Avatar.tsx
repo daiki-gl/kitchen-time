@@ -35,7 +35,6 @@ const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
         const file:any = e.target.files?.[0];
         if(file) {
           const newName = Date.now() + file.name;
-          console.log('hellohello');
         const { data, error } = await supabase.storage.from('avatar').upload(newName, file)
 
           if(error) console.log(error);
@@ -65,7 +64,6 @@ const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
                 
             ): (
                 <Image
-              // src={`${avatar ? avatar : '/images/Guest.jpg'}`}
               src={url}
               alt=''
               width={80}
