@@ -2,7 +2,7 @@ import React from 'react'
 
 const custom404 = () => {
   return (
-    <div>404</div>
+    <div className='text-right  h-screen'>404</div>
   )
 }
 

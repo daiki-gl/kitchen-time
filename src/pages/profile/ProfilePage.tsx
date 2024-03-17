@@ -27,7 +27,7 @@ const ProfilePage = ({data}:{data:any}) => {
     const {query} = useRouter()
     console.log({query});
 
-    if(query?.tab === undefined) query.tab = Array('recipe');
+    if(query?.tab === undefined || null) query.tab = Array('recipe');
 
 
   return (

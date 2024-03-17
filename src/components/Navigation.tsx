@@ -11,23 +11,20 @@ import { selectUser, unsetUser } from '@/redux/slice/UserSlice'
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabaseClient'
 
-const DEFAULT_URL = '/images/default_cover.jpg'
+const DEFAULT_URL = '/images/Guest.jpg'
 
 const Navigation = () => {
-  // const session = useSession()
   const dispatch = useDispatch()
   const {push, pathname} = useRouter()
   const user = useSelector(selectUser)
   const [url, setUrl] = useState<string>(user.avatar|| DEFAULT_URL)
 
-  // console.log({user});
 
   const handleLogout = () => {
     push('/login').finally( async() =>{
       dispatch(unsetUser())
       const { error } = await supabase.auth.signOut()
       if (error) return console.error(error)
-      // console.log('>>>>>>>>>',user);
     })
   }
 
@@ -85,12 +82,12 @@ const Navigation = () => {
 
           <li className='hidden md:block w-5 h-5 md:mb-5 md:w-7 md:h-7 lg:w-full'>
             <Link href={{
-                pathname:`/profile/${user.id}`,
+                pathname:`/profile/${user.id}/recipe`,
                 query: { 
                   ...user,
                   }
                 }}
-                as={`/profile/${(user.id)}`}
+                as={`/profile/${(user.id)}/recipe`}
                 className='block w-full h-full  md:inline-block lg:w-auto text-white'
                 >
                 <Image 
