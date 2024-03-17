@@ -33,7 +33,7 @@ export default function Home({data}:any) {
     {user &&
     <>
       <SearchBox />
-      {/* <HomePage data={data} /> */}
+      <HomePage data={data} />
      </>
     }
     </div>
@@ -41,14 +41,16 @@ export default function Home({data}:any) {
 }
 
 
-// export const getServerSideProps = async() => {
-//     const {data, error} = await supabase
-//             .from('recipes')
-//             .select('*, users(id, name, avatar, bio, cover_image)')
+export const getServerSideProps = async() => {
+    const {data, error} = await supabase
+            .from('recipes')
+            .select('*, users(id, name, avatar, bio, cover_image)')
             
-//             if(error){
-//                 console.log(error);
-//                 return []
-//             }
-//     return {props: {data}}
-// }
+            if(error){
+              console.log('*****************************');
+                console.log('Here is the error ---->',error);
+                console.log('*****************************');
+                return []
+            }
+    return {props: {data}}
+}
