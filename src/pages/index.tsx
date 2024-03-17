@@ -33,7 +33,7 @@ export default function Home({data}:any) {
     {user &&
     <>
       <SearchBox />
-      <HomePage data={data} />
+      {/* <HomePage data={data} /> */}
      </>
     }
     </div>
