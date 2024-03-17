@@ -17,7 +17,7 @@ const Navigation = () => {
   const dispatch = useDispatch()
   const {push, pathname} = useRouter()
   const user = useSelector(selectUser)
-  const [url, setUrl] = useState<string>(user.avatar|| DEFAULT_URL)
+  const [url, setUrl] = useState<string>(user?.avatar|| DEFAULT_URL)
 
 
   const handleLogout = () => {

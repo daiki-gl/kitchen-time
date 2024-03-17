@@ -22,7 +22,7 @@ const Header = () => {
     const {switchHeader} = useHeaderTitleSwitcher()
     // const user:any = useGetLoginUser()
     const user = useSelector(selectUser)
-    const [url, setUrl] = useState<string>(user.avatar|| DEFAULT_URL)
+    const [url, setUrl] = useState<string>(user?.avatar|| DEFAULT_URL)
     // const user = useSelector<RootState>(state => (state.users.user !== null) && state.users?.user[0]) as User
     // const dispatch = useDispatch<AppDispatch>()
 
