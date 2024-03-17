@@ -12,17 +12,23 @@ import React, { useEffect, useState } from 'react'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { BiUser } from 'react-icons/bi'
 import { useDispatch, useSelector } from 'react-redux'
+import { selectUser } from '@/redux/slice/UserSlice'
 
-const DEFAULT_URL = '/images/default_cover.jpg'
+const DEFAULT_URL = '/images/Guest.jpg'
 
 const Header = () => {
     const {pathname, query} = useRouter()
     const [header, setHeader] = useState('')
     const {switchHeader} = useHeaderTitleSwitcher()
-    const user:any = useGetLoginUser()
+    // const user:any = useGetLoginUser()
+    const user = useSelector(selectUser)
     const [url, setUrl] = useState<string>(user.avatar|| DEFAULT_URL)
     // const user = useSelector<RootState>(state => (state.users.user !== null) && state.users?.user[0]) as User
     // const dispatch = useDispatch<AppDispatch>()
+
+    useEffect(() => {
+      user && user.avatar && setUrl(user.avatar)
+     },[user])
 
 
     useEffect(() => {
@@ -35,6 +41,10 @@ const Header = () => {
     //  user && user.avatar && setUrl(user.avatar)
     // },[user])
 
+    useEffect(() => {
+      user && user.avatar && setUrl(user.avatar)
+     },[user])
+
   return (
     <header className='header flex justify-between items-center bg-primaryColor py-2 px-5 fixed w-screen top-0 z-50 md:hidden'>
         {pathname === '/' && (
@@ -46,17 +56,21 @@ const Header = () => {
         {
         user && (
             <Link 
-                href={{
-                    pathname:`/profile/${user.id}`,
-                    // query: { 
-                    // ...user,
-                    // }
-                    }}
-                    // as={`/profile/${(user.id)}`}
-                className='rounded-full h-[40px] w-[40px] border border-white'
+            href={{
+              pathname:`/profile/${user.id}/recipe`,
+              query: { 
+                ...user,
+                }
+              }}
+              as={`/profile/${(user.id)}/recipe`}
+                className='relative rounded-full h-[40px] w-[40px] border border-white'
             >
-                    {/* <Image src={url} alt='username' width={40} height={40} className="rounded-full w-full h-full object-cover" /> */}
-                    <BiUser />
+               <Image 
+                  src={url}
+                  alt='username' 
+                  width={40} 
+                  height={40} 
+                  className="rounded-full w-full h-full object-cover inline-block lg:w-[30px] lg:h-[30px] pointer-events-none" />
             </Link>
             )
         }

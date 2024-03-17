@@ -45,6 +45,12 @@ const RecipeCard = ({recipe}:{recipe:any}) => {
       }
     }
 
+    console.log('RecipeCard.tsx ->',{recipe})
+    
+    useEffect(() => {
+      console.log('RecipeCard.tsx(useEffect) ->',{recipe})
+    },[])
+
       const fetchBookmark = async() => {
         const {data, error} = await supabase.from('bookmark') 
             .select()

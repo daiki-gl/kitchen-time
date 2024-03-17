@@ -8,7 +8,6 @@ import Avatar from './Avatar';
 import Cover from './Cover';
 
 const ProfileInfo = ({userData}:{userData: any}) => {
-  console.log({userData});
     const { id: loginUserId } = useSelector((state:any) => state.persistedReducer.users?.user[0]);
 
     const [isEdit, setIsEdit] = useState(false)
@@ -80,10 +79,11 @@ const ProfileInfo = ({userData}:{userData: any}) => {
               )} 
           </div>
 
-          <div>
+            {/* Add this later */}
+          {/* <div>
             <Link className='mr-4 text-xs' href="/follows" >12 Followings</Link>
             <Link className='text-xs' href="/followers" >39 Followers</Link>
-          </div>
+          </div> */}
 
           <div className="mt-3 mb-5">
             {isEdit ? (
