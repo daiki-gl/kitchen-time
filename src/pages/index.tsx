@@ -13,12 +13,6 @@ import HomePage from '@/components/Home/HomePage';
 export default function Home({data}:any) {
   const { user, loadingUser ,recipes, loadingRecipes: loading } = useGetData()
   const { push } = useRouter()
-
-  console.log('index.tsx->',{data})
-  
-  useEffect(() => {
-    console.log('index.tsx(useEffect)->',{data})
-  },[])
   
   useEffect(() => {
     if(loadingUser !== 'pending') {
@@ -47,9 +41,7 @@ export const getServerSideProps = async() => {
             .select('*, users(id, name, avatar, bio, cover_image)')
             
             if(error){
-              console.log('*****************************');
-                console.log('Here is the error ---->',error);
-                console.log('*****************************');
+                console.log(error);
                 return []
             }
     return {props: {data}}
