@@ -41,14 +41,14 @@ export default function Home({data}:any) {
 }
 
 
-export const getServerSideProps = async() => {
-    const {data, error} = await supabase
-            .from('recipes')
-            .select('*, users(id, name, avatar, bio, cover_image)')
+// export const getServerSideProps = async() => {
+//     const {data, error} = await supabase
+//             .from('recipes')
+//             .select('*, users(id, name, avatar, bio, cover_image)')
             
-            if(error){
-                console.log(error);
-                return []
-            }
-    return {props: {data}}
-}
+//             if(error){
+//                 console.log(error);
+//                 return []
+//             }
+//     return {props: {data}}
+// }
