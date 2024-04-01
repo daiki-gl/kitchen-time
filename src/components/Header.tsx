@@ -1,45 +1,29 @@
-import useGetLoginUser from '@/hooks/useGetData'
 import useHeaderTitleSwitcher from '@/hooks/useHeaderTitleSwitcher'
-import { supabase } from '@/lib/supabaseClient'
-import { getLoginUser } from '@/redux/middleware/api'
-import { AppDispatch, RootState } from '@/redux/store'
-import { User } from '@/types/type'
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { MdArrowBackIosNew } from 'react-icons/md'
-import { BiUser } from 'react-icons/bi'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { selectUser } from '@/redux/slice/UserSlice'
 
 const DEFAULT_URL = '/images/Guest.jpg'
 
 const Header = () => {
-    const {pathname, query} = useRouter()
+    const {pathname, query: {name , title}} = useRouter()
     const [header, setHeader] = useState('')
     const {switchHeader} = useHeaderTitleSwitcher()
-    // const user:any = useGetLoginUser()
     const user = useSelector(selectUser)
-    const [url, setUrl] = useState<string>(user?.avatar|| DEFAULT_URL)
-    // const user = useSelector<RootState>(state => (state.users.user !== null) && state.users?.user[0]) as User
-    // const dispatch = useDispatch<AppDispatch>()
+    const [url, setUrl] = useState<string>(DEFAULT_URL)
 
     useEffect(() => {
       user && user.avatar && setUrl(user.avatar)
      },[user])
 
-
     useEffect(() => {
-       setHeader(switchHeader(pathname, query))
-       // eslint-disable-next-line react-hooks/exhaustive-deps
+      console.log('Query', name, title)
+       setHeader(switchHeader(pathname, String(name), String(title)))
     },[pathname])
-
-    // useEffect(() => {
-    //   // dispatch(getLoginUser(user.id))
-    //  user && user.avatar && setUrl(user.avatar)
-    // },[user])
 
     useEffect(() => {
       user && user.avatar && setUrl(user.avatar)

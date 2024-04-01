@@ -1,14 +1,5 @@
-import { CredentialFormData } from './CredentialForm'
-import { FieldErrors, UseFormRegister } from 'react-hook-form'
-
-type CredentialInputProps = {
-    title: string
-    register: UseFormRegister<CredentialFormData>
-    errors: FieldErrors<CredentialFormData>
-    type?: string
-    label: "username" | "email" | "password" | "confirmPassword"
-    registerOptions?: any
-}
+import { CredentialInputProps } from '@/types/type'
+import { useEffect } from 'react'
 
 const CredentialInput = ({title, register, errors, type = "text", label, registerOptions = null, }:CredentialInputProps) => {
   return (
@@ -18,7 +9,6 @@ const CredentialInput = ({title, register, errors, type = "text", label, registe
                  type={type}
                  id={label}
                  className='rounded-full w-full p-2 bg-white text-font-color'
-                //  autoComplete="new-username"
                  {...register(label, registerOptions ? registerOptions : {required: true}) }
           />
             {errors[label] && <p className='text-error'>{errors[label]?.message}</p>}

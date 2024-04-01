@@ -6,9 +6,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Avatar from './Avatar';
 import Cover from './Cover';
+import { User } from '@/types/type';
+import { RootState } from '@/redux/store';
 
-const ProfileInfo = ({userData}:{userData: any}) => {
-    const { id: loginUserId } = useSelector((state:any) => state.persistedReducer.users?.user[0]);
+const ProfileInfo = ({userData}:{userData:User}) => {
+    const user = useSelector((state:RootState) => state.persistedReducer.users?.user?.[0]);
+    const loginUserId = user?.id
 
     const [isEdit, setIsEdit] = useState(false)
     const bioRef = useRef<HTMLTextAreaElement>(null)
@@ -70,16 +73,17 @@ const ProfileInfo = ({userData}:{userData: any}) => {
               className="btn btn-sm px-5 bg-white border-primaryColor border-2 text-font-color hover:bg-primaryColor hover:text-white hover:border-primaryColor">Edit</button>
             )}
 
-            {userData.id !== loginUserId && (
+              {/* Future improvement */}
+            {/* {userData.id !== loginUserId && (
               <div className='flex flex-col'>
                 <button 
                 onClick={() => console.log('follow')}
                 className="btn btn-sm px-5 bg-white border-accentColor border-2 text-font-color hover:bg-accentColor hover:text-white hover:border-accentColor mb-2">Follow</button>
               </div>
-              )} 
+              )}  */}
           </div>
 
-            {/* Add this later */}
+            {/* Future improvement */}
           {/* <div>
             <Link className='mr-4 text-xs' href="/follows" >12 Followings</Link>
             <Link className='text-xs' href="/followers" >39 Followers</Link>

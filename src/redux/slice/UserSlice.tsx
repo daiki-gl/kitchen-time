@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { getLoginUser } from "../middleware/api"
 import { RootState } from "../store"
+import { User } from "@/types/type"
 
-// change any type
-type StateType = {
-    user: any | null,
+export type StateTypeUser = {
+    user: User[] | null,
     loading: string,
     error: string | null | undefined
 }
 
-const initialState:StateType = {
+const initialState:StateTypeUser = {
     user: null,
     loading: 'idle',
     error: null,

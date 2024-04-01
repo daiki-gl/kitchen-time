@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod';
@@ -8,7 +8,8 @@ import { useRouter } from 'next/router';
 import { config } from '@/config';
 import { useSelector } from 'react-redux';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { type } from 'os';
+import { RootState } from '@/redux/store';
+import { File } from 'buffer';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -34,6 +35,13 @@ const schema = z.object({
 
 })
 
+type SubmitData = {
+  title?: string;
+  thumbnail?: string;
+  serves?: string;
+  tips?: string;
+}
+
 export type RecipeFormProps = {
     item?: {
       id: string;
@@ -41,27 +49,35 @@ export type RecipeFormProps = {
       title: string;
       thumbnail: string;
       serves: string;
-      ingredients: string;
-      directions: string;
+      ingredients: ingredientsType
+      directions: directionType
       tips: string;
       user_id: string;
       recipeId: string;
     }
   }
 
+  export type directionType = {
+    desc: string,
+    image: string
+  }[]
+
+  export type ingredientsType = {
+    name: string,
+    quantity: string
+  }[]
+
 
 const RecipeForm = ({item}:RecipeFormProps) => {
     const { push, pathname } = useRouter()
-    const [ingredients, setIngredients] = useState<any>([])
-    const [directions, setDirections] = useState<any>([])
-    const id = useSelector((state:any) => state.persistedReducer.users.user[0].id)
+    const [ingredients, setIngredients] = useState<ingredientsType>([])
+    const [directions, setDirections] = useState<directionType>([])
     const [ingredientInput, setIngredientInput] = useState(1)
     const [directionsInput, setDirectionsInput] = useState(1)
+    const id = useSelector((state:RootState) => state.persistedReducer.users.user?.[0].id)
 
     const ingredientsRef = useRef(null);
     const directionsRef = useRef(null);
-
-    console.log(id)
 
 
     useEffect(() => {
@@ -72,7 +88,6 @@ const RecipeForm = ({item}:RecipeFormProps) => {
     useEffect(() => {
      ingredients.length > 0 && setIngredientInput(ingredients.length)
      directions.length > 0 && setDirectionsInput(directions.length)
-      console.log(ingredients);
     },[ingredients,directions])
 
    const { register, handleSubmit, formState: {errors, isSubmitting}, getValues } = useForm({
@@ -88,6 +103,7 @@ const RecipeForm = ({item}:RecipeFormProps) => {
     })
 
     const insertImage = async (image:any) => {
+      console.log(image)
       const newName = Date.now() + image.name;
       const { data, error } = await supabase.storage.from('thumbnail').upload(newName, image)
         if(error) console.log(error);
@@ -98,17 +114,15 @@ const RecipeForm = ({item}:RecipeFormProps) => {
          return 
     }
 
-
-    const onSubmit = async(data:any) => {
+    const onSubmit = async(data:SubmitData) => {
+      console.log('DATA', data)
       const ingredients = handleSanitize(ingredientsRef, 'name', 'quantity');
       const directions = handleSanitize(directionsRef, 'desc', 'image');
       const image = data.thumbnail && typeof data.thumbnail[0] !== 'string' ? await insertImage(data.thumbnail[0]) : data.thumbnail;
 
         if(pathname === '/recipe/create') {
-          // console.log(data.thumbnail);
-          // console.log(image);
          if(ingredients && directions) {
-           const { data:_data,error }:any = await supabase.from('recipes')
+           const { data:_data,error } = await supabase.from('recipes')
               .insert({
                 ...data, 
                 thumbnail: image, 
@@ -122,7 +136,7 @@ const RecipeForm = ({item}:RecipeFormProps) => {
               console.log(_data);
          } 
         } else {
-          const {data: _data,error}:any = await supabase.from('recipes')
+          const {data: _data,error} = await supabase.from('recipes')
               .update({
                 ...data, 
                 thumbnail: image,
@@ -139,22 +153,39 @@ const RecipeForm = ({item}:RecipeFormProps) => {
             push('/')
     }
 
-    const handleSanitize = (ref:any,name1:any, name2:any) => {
-      const length = ref.current.children.length;
-      const newArr:string[] = []
-      for(let i = 0; i < length; i++) {
-        const obj:any = {};
-        obj[name1] = ref.current.children[i].children[0].value;
+    // type Ref = {
+    //   ref: React.RefObject<HTMLDivElement>,
+    //   current: {
+    //     children: {
+    //       children: {
+    //         value: string,
+    //         type: string,
+    //         files: File,
+    //       }[],
+    //       length: number
+    //     }[]
+    //   }
+    // }
 
-        if(ref.current.children[i].children[1].type === 'file') {
-          obj[name2] = ref.current.children[i].children[1].files;
-        } else {
-          obj[name2] = ref.current.children[i].children[1].value;
-        }
-        newArr.push(obj)
+    const handleSanitize = (ref:any,name1:string, name2:string) => {
+      if(ref !== null){
+        const length = ref.current?.children.length;
+        // console.log(ref, name1, name2)
+        const newArr:string[] = []
+        for(let i = 0; i < length!; i++) {
+          const obj:any = {};
+          obj[name1] = ref.current?.children[i].children?.[0].value;
+  
+          if(ref.current?.children[i].children?.[1].type === 'file') {
+            obj[name2] = ref.current?.children[i].children[1].files;
+          } else {
+            obj[name2] = ref.current?.children[i].children[1].value;
+          }
+          newArr.push(obj)
+      }
+      return newArr
     }
 
-    return newArr
     }
 
   return (

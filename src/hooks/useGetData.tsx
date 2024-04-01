@@ -1,12 +1,13 @@
 import { getLoginUser, getRecipes } from '@/redux/middleware/api'
 import { selectRecipe, selectUser, selectUserLoading } from '@/redux/slice/UserSlice'
-import { AppDispatch, RootState } from '@/redux/store'
+import { RootState } from '@/redux/store'
 import { Loading, RecipeData, User } from '@/types/type'
+import { ThunkDispatch } from '@reduxjs/toolkit'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const useGetData = () => {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<ThunkDispatch<RootState,string, any>>()
 
   const user = useSelector(selectUser)
   const loadingUser = useSelector(selectUserLoading)

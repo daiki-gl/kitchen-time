@@ -6,22 +6,16 @@ import { useEffect, useState } from 'react'
 import useAuth from '@/hooks/useAuth'
 import { loginSchema, signUpSchema } from '@/schema/schema'
 import CredentialInput from './CredentialInput'
-
-export type CredentialFormData = {
-    username?: string
-    email: string;
-    password : string
-    confirmPassword?: string;
-}
+import { CredentialFormData, loginSchemaType, signUpSchemaType } from '@/types/type'
 
 const CredentialForm = () => {
     const { pathname } = useRouter()
-    const [schema, setSchema] = useState<any>(loginSchema)
+    const [schema, setSchema] = useState<loginSchemaType | signUpSchemaType>(loginSchema)
     const {register, handleSubmit, formState: { errors , isSubmitting }} = useForm<CredentialFormData>({
     resolver: zodResolver(schema)
     })
     const { handleSignUp, handleLogin } = useAuth()
-    const [loginError, setLoginError] = useState<any>(null)
+    const [loginError, setLoginError] = useState<null | string>(null)
 
     useEffect(() => {
         (pathname === '/signup') ? setSchema(signUpSchema) : setSchema(loginSchema)
@@ -58,7 +52,7 @@ const CredentialForm = () => {
         {loginError && <p className='text-error -mt-4 mb-2'>{loginError}</p>}
 
        {pathname === '/signup' && <CredentialInput
-            title='Password(confirm)'
+            title='Confirm Password'
             register={register}
             errors={errors}
             label='confirmPassword'

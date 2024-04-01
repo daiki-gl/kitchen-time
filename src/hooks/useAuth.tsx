@@ -3,16 +3,18 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/slice/UserSlice';
 import { getLoginUser } from '@/redux/middleware/api';
-import { AppDispatch } from '@/redux/store';
-import { useEffect } from 'react';
+import { AppDispatch, RootState } from '@/redux/store';
 import useGetData from './useGetData';
+import { CredentialFormData } from '@/types/type';
+import { Dispatch, SetStateAction } from 'react';
+import { ThunkDispatch } from '@reduxjs/toolkit';
 
 const useAuth = () => {
     const { push } = useRouter()
-    const dispatch = useDispatch<AppDispatch>()
+    const dispatch = useDispatch<ThunkDispatch<RootState,string, any>>()
     const { user } = useGetData()
 
-    const handleSignUp = async(formData:any) => {
+    const handleSignUp = async(formData:CredentialFormData) => {
       const {data: {session}, error} =  await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
@@ -21,7 +23,6 @@ const useAuth = () => {
       if(error) console.log(error);
         
       if(session) {
-        //   console.log(session);
         const {data, error} = await supabase
           .from('users')
           .insert({
@@ -36,7 +37,7 @@ const useAuth = () => {
       }
     }
 
-      const handleLogin = async(formData:any, setLoginError: any) => {
+      const handleLogin = async(formData:CredentialFormData, setLoginError:Dispatch<SetStateAction<string | null>>) => {
         // console.log(formData);
         setLoginError(null)
         const {data: {session}, error} =  await supabase.auth.signInWithPassword({

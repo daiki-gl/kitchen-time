@@ -1,34 +1,13 @@
 import Tabs from '@/components/Tabs'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
 import Settings from '@/components/Settings'
 import RecipeList from '@/components/RecipeList'
-import { useDispatch, useSelector } from 'react-redux'
-import { supabase } from '@/lib/supabaseClient'
-import Cover from '@/components/Cover'
-import Avatar from '@/components/Avatar'
-import { getLoginUser } from '@/redux/middleware/api'
 import ProfileInfo from '@/components/ProfileInfo'
+import { User } from '@/types/type'
 
-type ImageFile = {
-  name: string,
-}
-
-export type ProfilePageProps = {
-  isEdit: boolean,
-  setIsEdit: any, 
-  cover_image?: string, 
-  userId: string
-  avatar?: string
-}
-
-const ProfilePage = ({data}:{data:any}) => {
+const ProfilePage = ({data}:{data:User[]}) => {
     const {query} = useRouter()
-    console.log({query});
-
     if(query?.tab === undefined || null) query.tab = Array('recipe');
-
 
   return (
     <div className="min-h-screen pt-14 pb-24 mx-auto md:ml-[68px] md:pt-5 lg:ml-80">

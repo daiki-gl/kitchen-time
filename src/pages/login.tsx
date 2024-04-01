@@ -1,21 +1,8 @@
 import CredentialForm from '@/components/CredentialForm'
-import { supabase } from '@/lib/supabaseClient'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect } from 'react'
 
 const Login = () => {
-
-  useEffect(() => {
-    (async() => {
-      const res = await fetchSession()
-    })()
-  },[])
-
-  async function fetchSession() {
-    const { data: { session } } = await supabase.auth.getSession()
-    return session
-  } 
 
   return (
     <div className='mx-auto px-3 bg-login-bg bg-cover h-screen'>
@@ -37,20 +24,4 @@ const Login = () => {
     </div>
   )
 }
-
-// export const getServerSideProps = wrapper.getServerSideProps((store) = async() => {
-// export const getServerSideProps = async() => {
-//     const {data, error} = await supabase
-//     .from('users')
-//     .select()
-//     .eq('id', '49a55ded-fbc1-4fd3-978a-5d1494b24c25')
-    
-//     if(error){
-//             console.log(error);
-//             return []
-//     }
-//     store.dispatch(setUser(data))
-//     return {props: {data}}
-// }
-  // })
   export default Login

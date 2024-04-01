@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import { selectUser, unsetUser } from '@/redux/slice/UserSlice'
+import { RootState } from '@/redux/store'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -11,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 const Settings = () => {
     const { push } = useRouter()
     const dispatch = useDispatch();
-    const user = useSelector(selectUser)
+    const user = useSelector((state:RootState) => state.persistedReducer.users.user?.[0])
 
     const handleLogout = () => {
         push('/login').finally( async() =>{
@@ -32,12 +33,12 @@ const Settings = () => {
                 </Link>
                 <Link 
                 href={{
-                        pathname:`/profile/${user.id}/recipe`,
+                        pathname:`/profile/${user?.id}/recipe`,
                         query: { 
                         ...user,
                         }
                         }}
-                        as={`/profile/${(user.id)}/recipe`}
+                        as={`/profile/${(user?.id)}/recipe`}
                  className="text-font-color" >
                     <BiFoodMenu className='inline-block mr-2  text-xl'/>
                     Your recipes

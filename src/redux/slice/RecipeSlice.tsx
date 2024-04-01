@@ -1,13 +1,14 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 import { getRecipes } from "../middleware/api"
+import { RecipeData } from "@/types/type"
 
-type StateType = {
-    recipes: string[] | null,
+export type StateTypeRecipe = {
+    recipes: RecipeData[] | null,
     loading: string,
     error: string | null | undefined
 }
 
-const initialState:StateType = {
+const initialState:StateTypeRecipe = {
     recipes: [],
     loading: 'idle',
     error: null,
@@ -27,7 +28,7 @@ const recipeSlice = createSlice({
                 state.loading = 'pending'
             }
         })
-        .addCase(getRecipes.fulfilled, (state:any, action) => {
+        .addCase(getRecipes.fulfilled, (state, action) => {
             if(state.loading === 'pending') {
                 state.loading = 'idle'
                 state.recipes = action.payload

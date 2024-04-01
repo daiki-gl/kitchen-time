@@ -1,7 +1,8 @@
 import { config } from '@/config'
 import { supabase } from '@/lib/supabaseClient'
-import { ProfilePageProps } from '@/pages/profile/ProfilePage'
 import { getLoginUser } from '@/redux/middleware/api'
+import { RootState } from '@/redux/store'
+import { ThunkDispatch } from '@reduxjs/toolkit'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -12,16 +13,23 @@ import FadeLoader from 'react-spinners/FadeLoader'
 
 const DEFAULT_URL = '/images/default_cover.jpg'
 
-const Cover = ({isEdit, setIsEdit, cover_image, userId}: ProfilePageProps) => {
-    const { id } = useSelector((state:any) => state.persistedReducer.users.user[0])
+type CoverType = {
+  isEdit: boolean,
+  setIsEdit: React.Dispatch<React.SetStateAction<boolean>>,
+  cover_image?: string,
+  userId: string
+}
+
+const Cover = ({isEdit, setIsEdit, cover_image, userId}: CoverType) => {
+    const user = useSelector((state:RootState) => state.persistedReducer.users.user?.[0])
     // change these to Redux later
     const [url, setUrl] = useState(cover_image || DEFAULT_URL)
     const [editing, setEditing] = useState(false)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<ThunkDispatch<RootState,string, any>>()
     const {asPath} = useRouter()
 
     useEffect(() => {
-      if(userId === id) dispatch(getLoginUser(id))
+      if(userId === user?.id && user) dispatch(getLoginUser(user.id))
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[url])
     
@@ -32,17 +40,17 @@ const Cover = ({isEdit, setIsEdit, cover_image, userId}: ProfilePageProps) => {
 
     const updateCover = async(e:React.ChangeEvent<HTMLInputElement>) => {
         setEditing(true)
-        const file:any = e.target.files?.[0];
+        const file = e.target.files?.[0];
         if(file) {
           const newName = Date.now() + file.name;
         const { data, error } = await supabase.storage.from('cover_image').upload(newName, file)
           if(error) console.log(error);
   
-           if(data) {
+           if(data && user) {
             const url = config.supabase_url + `/storage/v1/object/public/cover_image/` + data.path;
              const {error} = await supabase.from('users')
               .update({'cover_image': url})
-              .eq('id', id)
+              .eq('id', user.id)
               .select()
   
               if(error) console.log(error);

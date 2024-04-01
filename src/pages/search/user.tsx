@@ -1,29 +1,19 @@
 import { supabase } from '@/lib/supabaseClient'
+import { User } from '@/types/type'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import { AiOutlineSearch } from 'react-icons/ai'
-
-// type searchedUser = {
-//   id : string
-//   name :  string
-//   avatar : string
-//   bio  : string,
-//   cover_image : string 
-// }
-
-type searchedUser = Awaited<ReturnType<typeof SearchUser>>
+import React, { useState } from 'react'
 
 const SearchUser = () => {
-  const [results, setResults] = useState<any>(null);
-  // const [results, setResults] = useState<searchedUser[] | null>(null);
+  const [results, setResults] = useState<User[] | null>(null);
   
   async function searchUser(keyword:string | null) {
    const {data, error} = await supabase.from('users')
       .select()
       .ilike('name', `%${keyword}%`)
       if(error) console.log(error);
-      setResults(data)
+      const userData = data as User[]
+      setResults(userData)
   } 
   
   const handleSearch = async(e:React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +34,7 @@ const SearchUser = () => {
 
       <div className="my-3">
         {results && (
-          results.map((result:any) => (
+          results.map((result:User) => (
           <div key={result.id} className="my-5">
             <Link href={{
                 pathname:`/profile/${result.id}`,

@@ -1,25 +1,27 @@
 import { supabase } from '@/lib/supabaseClient'
+import { RecipeData } from '@/types/type'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
-import { AiOutlineSearch } from 'react-icons/ai'
+import React, { useEffect, useState } from 'react'
 
 const SearchRecipe = () => {
-  const [results, setResults] = useState<any>(null);
+  const [results, setResults] = useState<RecipeData[] | null>(null);
 
   const handleSearch = async(e:React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const keyword = e.target.value || null
-    console.log(keyword);
     const { data, error } = await supabase.from('recipes')
       .select('*, users(id, name, avatar)')
       .ilike('title', `%${keyword}%`)
 
       if(error) console.log(error);
-      setResults(data)
+      const recipeData = data as RecipeData[] | null
+      setResults(recipeData)
   }
 
-  console.log(results);
+  useEffect(() => {
+    console.log(results);
+  },[results])
 
   return (
     <div className='min-h-screen px-5 pt-14 pb-24 mx-auto md:ml-[68px] md:pt-5 lg:ml-80'>
@@ -38,20 +40,20 @@ const SearchRecipe = () => {
 
 
             {results && (
-              results.map((result:any) => (
+              results.map((result:RecipeData) => (
             <div key={result.id} className="rounded-full w-full relative pt-[80%]">
               {/* <Link href={`/recipe/${result.title}`} > */}
               <Link href={{
                 pathname:`/recipe/${result.id}`,
-                query: { 
-                  ...result,
-                  ...result.users,
-                  recipeId: result.id,
-                  ingredients: JSON.stringify(result.ingredients), 
-                  directions: JSON.stringify(result.directions),
-                  }
+                // query: { 
+                //   ...result,
+                //   ...result.users,
+                //   recipeId: result.id,
+                //   ingredients: JSON.stringify(result.ingredients), 
+                //   directions: JSON.stringify(result.directions),
+                //   }
                 }}
-                as={`/recipe/${(result.id)}`}
+                // as={`/recipe/${(result.id)}`}
                 >
                 <Image 
                   src={`${result.thumbnail ? result.thumbnail : '/images/no-image-sm.jpg'}`}

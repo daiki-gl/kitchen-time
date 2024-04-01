@@ -1,27 +1,27 @@
 import { supabase } from '@/lib/supabaseClient'
+import { RecipeData, User } from '@/types/type'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-const RecipeList = ({userData}:any) => {
+const RecipeList = ({userData}:{userData:User}) => {
   // const { id } = useSelector(state => state.users.user[0])
 
   // const recipes = useSelector(state => state.recipe.recipes)
-  const [recipes, setRecipes] = useState<any>(null)
-  const [bookmarkRecipes, setBookmarkRecipes] = useState<any>(null);
-
+  const [recipes, setRecipes] = useState<RecipeData[] | null>(null)
+  const [bookmarkRecipes, setBookmarkRecipes] = useState<RecipeData[] | null>(null);
   const {query: {tab}}  = useRouter()
 
   const fetchRecipes = async() => {
     const {data, error} = await supabase.from('recipes')
       .select('*, users(id, name, avatar, bio, cover_image)')
       .eq('user_id', userData.id)
-
       if(error) console.log(error);
 
-      setRecipes(data)
+      const recipeData = data as RecipeData[]
+      setRecipes(recipeData)
   }
 
   const fetchBookmarkedRecipes = async() => {
@@ -37,7 +37,8 @@ const RecipeList = ({userData}:any) => {
           .in('id', bookmarkedIds)
 
           if(error) console.log(error);
-          setBookmarkRecipes(data)
+          const bookmarks = data as RecipeData[]
+          setBookmarkRecipes(bookmarks)
       }
 
       if(error) console.log(error);
@@ -58,18 +59,18 @@ const RecipeList = ({userData}:any) => {
   return (
     <div className="grid grid-cols-2 gap-5 md:grid-cols-3 m-5 xl:grid-cols-4 lg:lg:mx-24">
 
-        {recipes && tab && tab[0] === 'recipe' && recipes.map((recipe:any) => (
+        {recipes && tab && tab[0] === 'recipe' && recipes.map((recipe:RecipeData) => (
             <div key={recipe.id} className="rounded-full w-full relative pt-[80%]">
               <Link 
               href={{
                 pathname:`/recipe/${recipe.id}`,
-                query: { 
-                  ...recipe,
-                  ... recipe.users,
-                  recipeId: recipe.id,
-                  ingredients: JSON.stringify(recipe.ingredients), 
-                  directions: JSON.stringify(recipe.directions)
-                  }
+                // query: { 
+                //   ...recipe,
+                //   ... recipe.users,
+                //   recipeId: recipe.id,
+                //   ingredients: JSON.stringify(recipe.ingredients), 
+                //   directions: JSON.stringify(recipe.directions)
+                //   }
                 }}
                 as={`/recipe/${(recipe.id)}`}
                >
@@ -85,18 +86,18 @@ const RecipeList = ({userData}:any) => {
             </div>
         ))}
 
-        {bookmarkRecipes && tab && tab[0] === 'bookmark-list' && bookmarkRecipes.map((recipe:any) => (
+        {bookmarkRecipes && tab && tab[0] === 'bookmark-list' && bookmarkRecipes.map((recipe:RecipeData) => (
             <div key={recipe.id} className="rounded-full w-full relative pt-[80%]">
               <Link 
               href={{
                 pathname:`/recipe/${recipe.id}`,
-                query: { 
-                  ...recipe,
-                  ... recipe.users,
-                  recipeId: recipe.id,
-                  ingredients: JSON.stringify(recipe.ingredients), 
-                  directions: JSON.stringify(recipe.directions)
-                  }
+                // query: { 
+                //   ...recipe,
+                //   ... recipe.users,
+                //   recipeId: recipe.id,
+                //   ingredients: JSON.stringify(recipe.ingredients), 
+                //   directions: JSON.stringify(recipe.directions)
+                //   }
                 }}
                 as={`/recipe/${(recipe.id)}`}
                >

@@ -5,7 +5,6 @@ import { MdPersonSearch, MdOutlineFoodBank } from 'react-icons/md'
 import { BsBookmarkStar } from 'react-icons/bs'
 import { FiLogOut } from 'react-icons/fi'
 import { AiOutlineHome, AiOutlineSearch } from 'react-icons/ai'
-import { useSession } from '@supabase/auth-helpers-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser, unsetUser } from '@/redux/slice/UserSlice'
 import { useRouter } from 'next/router'
@@ -15,10 +14,9 @@ const DEFAULT_URL = '/images/Guest.jpg'
 
 const Navigation = () => {
   const dispatch = useDispatch()
-  const {push, pathname} = useRouter()
+  const {push} = useRouter()
   const user = useSelector(selectUser)
-  const [url, setUrl] = useState<string>(user?.avatar|| DEFAULT_URL)
-
+  const [url, setUrl] = useState<string>(DEFAULT_URL)
 
   const handleLogout = () => {
     push('/login').finally( async() =>{

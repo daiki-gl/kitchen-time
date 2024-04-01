@@ -1,22 +1,21 @@
 import { supabase } from '@/lib/supabaseClient'
+import { RecipeData, User } from '@/types/type'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 
-export const getRecipes: any = createAsyncThunk(
-  'recipe/getRecipes',
-  async () => {
-    const { data, error } = await supabase
-      .from('recipes')
-      .select('*, users(id, name, avatar, bio, cover_image)')
+export const getRecipes = createAsyncThunk('recipe/getRecipes', async () => {
+  const { data, error } = await supabase
+    .from('recipes')
+    .select('*, users(id, name, avatar, bio, cover_image)')
 
-    if (error) {
-      console.log(error)
-      return []
-    }
-    return data
+  if (error) {
+    console.log(error)
+    return []
   }
-)
+  const recipeData = data as RecipeData[]
+  return recipeData
+})
 
-export const getLoginUser: any = createAsyncThunk(
+export const getLoginUser = createAsyncThunk(
   'user/getLoginUser',
   async (id: string) => {
     const { data, error } = await supabase.from('users').select().eq('id', id)
@@ -25,6 +24,8 @@ export const getLoginUser: any = createAsyncThunk(
       console.log(error)
       return []
     }
-    return data
+    const loginUserData = data as User[]
+
+    return loginUserData
   }
 )

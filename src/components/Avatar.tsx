@@ -1,7 +1,10 @@
 import { config } from '@/config'
 import { supabase } from '@/lib/supabaseClient'
-import { ProfilePageProps } from '@/pages/profile/ProfilePage'
 import { getLoginUser } from '@/redux/middleware/api'
+import { RootState } from '@/redux/store'
+import { User } from '@/types/type'
+import { ThunkDispatch } from '@reduxjs/toolkit'
+
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -11,16 +14,24 @@ import FadeLoader from 'react-spinners/FadeLoader'
 
 const DEFAULT_URL = '/images/Guest.jpg'
 
-const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
-    const {id} = useSelector((state:any) => state.persistedReducer.users.user[0])
+type AvatarType = {
+  isEdit: boolean,
+  setIsEdit: React.Dispatch<React.SetStateAction<boolean>>,
+  avatar?: string,
+  userId: string
+}
+
+const Avatar = ({isEdit, setIsEdit, avatar, userId}: AvatarType) => {
+    const user = useSelector((state: RootState) => state.persistedReducer.users.user?.[0]);
     const [editing, setEditing] = useState(false)
     const [url, setUrl] = useState(avatar || DEFAULT_URL)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<ThunkDispatch<RootState,string, any>>()
+    // const dispatch = useDispatch()
     const {asPath} = useRouter()
 
     useEffect(() => {
-      if(userId === id) {
-        dispatch(getLoginUser(id))
+      if(userId === user?.id) {
+        dispatch(getLoginUser((user.id)))
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
       },[url])
@@ -32,7 +43,7 @@ const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
 
     const updateCover = async(e:React.ChangeEvent<HTMLInputElement>) => {
         setEditing(true)
-        const file:any = e.target.files?.[0];
+        const file = e.target.files?.[0];
         if(file) {
           const newName = Date.now() + file.name;
         const { data, error } = await supabase.storage.from('avatar').upload(newName, file)
@@ -43,7 +54,7 @@ const Avatar = ({isEdit, setIsEdit, avatar, userId}: ProfilePageProps) => {
             const url = config.supabase_url + `/storage/v1/object/public/avatar/` + data.path;
              const {error} = await supabase.from('users')
               .update({'avatar': url})
-              .eq('id', id)
+              .eq('id', user?.id)
               .select()
   
               if(error) console.log(error);

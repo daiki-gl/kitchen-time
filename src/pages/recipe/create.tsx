@@ -1,7 +1,5 @@
 import RecipeForm from '@/components/RecipeForm'
-import SearchBox from '@/components/SearchBox'
 import SearchInput from '@/components/SearchInput'
-import Image from 'next/image'
 import React from 'react'
 
 const Create = () => {

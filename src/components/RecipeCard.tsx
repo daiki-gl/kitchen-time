@@ -1,21 +1,21 @@
 import { supabase } from '@/lib/supabaseClient'
+import { RootState } from '@/redux/store'
+import { RecipeData } from '@/types/type'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { BsFillBookmarkDashFill, BsFillBookmarkPlusFill } from 'react-icons/bs'
 import { useSelector } from 'react-redux'
 
-const RecipeCard = ({recipe}:{recipe:any}) => {
-
-    const user = useSelector((state:any) => state.persistedReducer.users?.user[0])
-
+const RecipeCard = ({recipe}:{recipe:RecipeData}) => {
+    const user = useSelector((state:RootState) => state.persistedReducer.users?.user?.[0])
     const [bookmark, setBookmark] = useState(false)
 
     const toggleBookmark = async() => {
       if(bookmark) {
        const {data, error } = await supabase.from('bookmark')
           .delete()
-          .eq('recipe_id',recipe.id).eq('user_id', user.id)
+          .eq('recipe_id',recipe.id).eq('user_id', user?.id)
           .select()
           
           if(error) console.log(error);
@@ -31,7 +31,7 @@ const RecipeCard = ({recipe}:{recipe:any}) => {
         const { data, error } = await supabase.from('bookmark')
           .insert({
             recipe_id: recipe.id,
-            user_id: user.id
+            user_id: user?.id
           })
           .select()
       
@@ -68,15 +68,15 @@ const RecipeCard = ({recipe}:{recipe:any}) => {
     <div className="recipe-box mb-6" key={recipe.id}>
               <Link href={{
                 pathname:`/recipe/${recipe.id}`,
-                query: { 
-                  ...recipe,
-                  ...recipe.users,
-                  recipeId: recipe.id,
-                  ingredients: JSON.stringify(recipe.ingredients), 
-                  directions: JSON.stringify(recipe.directions),
-                  }
+                // query: { 
+                //   ...recipe,
+                //   ...recipe.users,
+                //   recipeId: recipe.id,
+                //   ingredients: JSON.stringify(recipe.ingredients), 
+                //   directions: JSON.stringify(recipe.directions),
+                //   }
                 }}
-                as={`/recipe/${recipe.id}`}
+                // as={`/recipe/${recipe.id}`}
                 >
                 <div className="recipe-thumbnail h-[200px]">
                   <Image

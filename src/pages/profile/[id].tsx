@@ -4,18 +4,21 @@ import Link from 'next/link'
 import React from 'react'
 import ProfilePage from './ProfilePage'
 import { supabase } from '@/lib/supabaseClient'
+import { User } from '@/types/type'
+import { GetStaticProps, GetStaticPropsContext, PreviewData } from 'next'
+import { ParsedUrlQuery } from 'querystring'
 
-const UserProfile = ({data}:{data:any}) => {
+export type userPropsType = {
+  data: User[]
+}
+
+const UserProfile = ({data}:{data:User[]}) => {
   return (
     <ProfilePage data={data} />
   )
 }
 
 export default UserProfile
-
-// export const getServerSideProps = async(context:any) => {
-//   return {props: {data: context.query}}
-// }
 
 export async function getStaticPaths() {
   const {data, error} = await supabase
@@ -28,22 +31,19 @@ export async function getStaticPaths() {
     }
 
   const allPaths = data.map((user) => {
-    // console.log('user id::::::::::',user.id);
     return {
       params: {
         id: user.id.toString(),
       },
     };
   });
-  // console.log('>>>>>>>>>>>',allPaths);
   return {
     paths: allPaths,
     fallback: false,
   };
 }
 
-export async function getStaticProps(context:any) {
-  // console.log(context.params.id);
+export async function getStaticProps(context:GetStaticPropsContext<ParsedUrlQuery, PreviewData>) {
   const {data, error} = await supabase
     .from('users')
     .select()
@@ -53,11 +53,7 @@ export async function getStaticProps(context:any) {
             return []
     }
 
-    const userData = data.filter(data => data.id === context.params.id)
+    const userData = data.filter(data => data.id ===  context.params?.id) as User[]
 
   return {props: {data: userData}}
 }
-
-// export async function getStaticProps(context) {
-//   return {props: {data: context.query}}
-// }

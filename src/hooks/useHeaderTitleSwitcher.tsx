@@ -1,28 +1,18 @@
-import { useEffect } from "react";
-
-type HeaderTitleSwitcherProps = {
-    pathname: string
-    query: any
-}
+type HeaderTitleSwitcherProps = (pathname:string, name?: string, title?:string) => string
 
 const useHeaderTitleSwitcher = () => {
-// const useHeaderTitleSwitcher = (pathname:string, query:any) => {
-    // useEffect(() => {
-    //     switchHeader(pathname, query);
-    // }, [pathname, query]);
-
-    const switchHeader = (pathname:string, query:any) => {
+    const switchHeader:HeaderTitleSwitcherProps = (pathname, name, title) => {
         switch (pathname) {
             case '/search/recipe':
                 return setHeader('Search Recipe');
             case '/search/user':
                 return setHeader('Search User');
             case '/recipe/[title]':
-                return setHeader(String(query.title).toUpperCase());
+                return setHeader(String(title).toUpperCase());
             case '/profile/[id]':
-                return setHeader(String(query.name));
+                return setHeader(String(name));
             case '/profile/[id]/[...tab]':
-                return setHeader(String(query.name));
+                return setHeader(String(name));
             case '/bookmark-list':
                 return setHeader('Bookmark List');
             case '/recipe/create':

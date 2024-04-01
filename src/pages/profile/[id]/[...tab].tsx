@@ -1,8 +1,11 @@
 import React from 'react'
 import ProfilePage from '../ProfilePage'
 import { supabase } from '@/lib/supabaseClient'
+import { GetServerSidePropsContext, PreviewData } from 'next'
+import { ParsedUrlQuery } from 'querystring'
+import { User } from '@/types/type'
 
-const Profile = ({data}:{data:any}) => {
+const Profile = ({data}:{data:User[]}) => {
   return (
     <>
     <ProfilePage data={data} />
@@ -12,7 +15,7 @@ const Profile = ({data}:{data:any}) => {
 
 export default Profile
 
-export const getServerSideProps = async(context:any) => {
+export const getServerSideProps = async(context:GetServerSidePropsContext<ParsedUrlQuery, PreviewData>) => {
   const {data, error} = await supabase
     .from('users')
     .select().eq('id', context.query.id)
